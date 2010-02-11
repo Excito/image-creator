@@ -1,0 +1,63 @@
+# BUBBA|TWO apt preferences
+#
+# Changes in this file might break your system
+#
+# Stable bubba release, currently marielle
+Package: *
+Pin:
+ release o=Excito, a=stable, v=1.0,
+ origin "update.excito.org"
+Pin-Priority: 999
+
+# Unstable bubba release, always claire
+Package: *
+Pin:
+ release o=Excito, a=unstable,
+ origin "update.excito.org"
+Pin-Priority: 999
+
+# Old stable release, currently vacant
+Package: *
+Pin: 
+ release o=Excito, a=oldstable, v=1.0,
+ origin "update.excito.org"
+Pin-Priority: 1000
+
+# Stable bubba stable debian upstream, currently etch
+Package: *
+Pin: 
+ release o=Debian Etch, a=upstream_stable, v=1.0,
+ origin "update.excito.org"
+Pin-Priority: 600
+
+# Unstable bubba stable debian upstream, currently etch
+Package: *
+Pin: 
+ release o=Debian Etch, a=upstream_stable_forclaire,
+ origin "update.excito.org"
+Pin-Priority: 600
+
+# Stable bubba debian upstream, currently vacant
+Package: *
+Pin:
+ release o=Debian Etch, a=upstream_oldstable, v=1.0,
+ origin "update.excito.org"
+Pin-Priority: 601
+
+# Upstream main debian, currently etch
+Package: *
+Pin: 
+ release o=Debian, a=stable, v=4.0r4a, c=main
+Pin-Priority: 500
+
+# Upstream contrib debian, currently etch
+Package: *
+Pin: 
+ release o=Debian, a=stable, v=4.0r4a, c=contrib
+Pin-Priority: 400
+
+# Upstream non-free debian, currently etch
+Package: *
+Pin: 
+ release o=Debian, a=stable, v=4.0r4a, c=non-free
+Pin-Priority: 300

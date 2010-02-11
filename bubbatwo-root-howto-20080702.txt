@@ -1,0 +1,281 @@
+För att bygga image.
+
+Stoppa services som kommer att krocka mellan host och installations chroot
+
+* stoppa webserver om den kör
+
+/etc/init.d/apache2 stop
+
+* stoppa postfix
+
+/etc/init.d/postfix stop
+
+* stoppa avahi-daemon
+
+/etc/init.d/avahi-daemon stop
+
+* Stoppa ev mysql
+
+* Gör grund debootstrap
+
+debootstrap upstream_etch . http://update.excito.org/
+
+(Eller om det är bygge på claire)
+
+debootstrap upstream_etch_forclaire . http://update.excito.org/
+
+* kopiera in vårat skeleton
+
+* Fixa rättigheter på webkatalog
+
+chmod -R g+w home/web/*
+chown -R :users home/web/*
+
+* Sätt hostname i systemet
+
+echo bubba > /proc/sys/kernel/hostname
+
+chroot . /bin/bash
+
+* montera proc
+
+mount /proc
+
+* Hämta excitos publika nyckel och lägg till den
+
+wget -O - http://update.excito.org/excito.pub | apt-key add -
+
+* kommentera ut upstream debian http://ftp.se.debian.org ur sources
+
+Om bygget är baserat på claire:
+
+Lägg till unstable sources i apt och kommentera ut stable dito
+
+* kör update
+
+apt-get update
+
+* installera locales
+
+apt-get install locales
+
+* konfigurera locales
+
+dpkg-reconfigure locales
+
+Skapa och sätt till default locale till en_US.UTF8 UTF8
+
+* Kör upgrade
+
+apt-get upgrade
+
+* installera bubba-paket
+
+apt-get install bubba-frontend
+
+* debconf frågor
+
+Allt default utom
+
+* Configure mdadm
+
+svara none
+
+* Start md automatically
+
+No
+
+* kommentera fram debian src ur apt. sources.
+
+* Radera nycklar som borde vara unika.
+
+* Stoppa services startade av installationen
+
+/etc/init.d/lighttpd stop
+/etc/init.d/samba stop
+/etc/init.d/mysql stop
+/etc/init.d/adminphp stop
+/etc/init.d/dnsmasq stop
+/etc/init.d/cupsys stop
+/etc/etc/init.d/dbus stop
+/init.d/ifplugd stop
+/etc/init.d/mt-daapd stop
+/etc/init.d/avahi-daemon stop
+/etc/init.d/proftpd stop
+
+(* Ändra debconf frontend till noninteractive
+
+dpkg-reconfigure debconf)
+
+* (Av ngn anledning får vi in php4 beroenden, tills vidare radera)
+
+dpkg --purge mac-fdisk yaboot lighttpd
+
+(dpkg --purge php4-imap libapache-mod-php4 mac-fdisk php4-common php4-pear yaboot)
+
+- sätt lösenord på root (Excito)
+
+passwd
+
+- slå på shadow passwords
+
+shadowconfig on
+
+* töm apt cache
+
+apt-get clean
+
+* ta bort apt-listor
+
+rm /var/lib/apt/lists/update.excito.org_dists_*
+
+* avmontera proc
+
+umount /proc
+
+* lämna chroot
+
+* töm logfiler
+
+find var/log -type f -exec /root/truncate {} \;
+
+där truncate är ngt i stil med:
+
+----8<--------------
+#! /bin/bash
+
+echo "Truncating $1"
+echo -ne >$1
+---8<---------------
+
+* radera pid-filer och sockets
+
+find var/run/ -name "*.pid" -exec rm {} \;
+rm var/run/cups/cups.sock
+
+* radera bash historik
+
+/root/truncate root/.bash_history
+
+* återställ hostname (Med eget hostname då)
+
+echo b2build > /proc/sys/kernel/hostname
+
+* Fixa lvm
+
+vi etc/lvm/lvm.conf
+
+(Sätt sysfs_scan = 0
+
+* fixa rättigheter på /home/storage
+
+chown root:users home/storage
+chmod 0777 home/storage/
+
+* packa ihop arkiv
+
+tar zcvf ../bubbaroot-`date +%y%m%d-%H%M`.tar.gz *
+
+===== Summary for claire-build ==============
+
+debootstrap upstream_etch_forclaire . http://update.excito.org/
+tar zxvf ../skeleton.tar.gz
+chmod -R g+w home/web/*
+chown -R :users home/web/*
+echo bubba > /proc/sys/kernel/hostname
+chroot . /bin/bash
+mount /proc
+wget -O - http://update.excito.org/excito.pub | apt-key add -
+
+* Edit sources
+
+vi /etc/apt/sources.list
+
+apt-get update
+apt-get install locales
+dpkg-reconfigure locales
+
+* Välj en_US utf-8 och sätt som default
+
+apt-get upgrade
+apt-get install bubba-frontend
+
+* Continue installing libc-client without Maildir support? - YES (Default)
+* Postfix Configuration - Internet Site (Default)
+* mail name -  bubba.localdomain (Default)
+* Run proftpd from inetd or standalone? - standalone (Default)
+
+* Workgroup/Domain Name: excito
+
+* Modify smb.conf to use WINS settings from DHCP? - No (Default)
+
+* Configuring mdadm, MD arrays needed for the root filesystem: none
+* Do you want to start MD arrays automatically? - No
+
+* Configure database for bubba-horde with dbconfig-common? - Yes (Default)
+* Password of your database's administrative user: [Enter - empty]
+* MySQL application password for bubba-horde: [Enter - empty]
+* Configure database for mediatomb-daemon with dbconfig-common? Yes (Default)
+* Password of your database's administrative user: [Enter - empty]
+* MySQL application password for mediatomb-daemon: [Enter - empty]
+
+/etc/init.d/lighttpd stop
+/etc/init.d/samba stop
+/etc/init.d/mysql stop
+/etc/init.d/adminphp stop
+/etc/init.d/dnsmasq stop
+/etc/init.d/cupsys stop
+/etc/etc/init.d/dbus stop
+/init.d/ifplugd stop
+/etc/init.d/mt-daapd stop
+/etc/init.d/avahi-daemon stop
+/etc/init.d/proftpd stop
+
+/etc/init.d/ifplugd stop
+/etc/init.d/dbus stop
+
+* Döda kvarvarande felaktiga dhclients
+
+* Ändra tillbaks sources
+
+dpkg --purge mac-fdisk yaboot lighttpd
+passwd
+shadowconfig on
+apt-get clean
+rm /var/lib/apt/lists/update.excito.org_dists_*
+umount /proc
+
+exit
+
+find var/log -type f -exec /root/truncate {} \;
+find var/run/ -name "*.pid" -exec rm {} \;
+rm var/run/cups/cups.sock
+/root/truncate root/.bash_history
+echo b2build > /proc/sys/kernel/hostname
+
+vi etc/lvm/lvm.conf
+* sätt sysfs_scan = 0
+
+chown root:users home/storage
+chmod 0777 home/storage/
+
+tar zcvf ../bubbaroot-`date +%y%m%d-%H%M`.tar.gz *
+  
+
+
+# Kommentar från Carl
+
+# på update.excito.org:
+cd /srv/update.excito.org
+sudo -H -u repository reprepro pull testing_full
+sudo -H -u repository reprepro export testing_full
+
+#lokalt
+
+make skel
+scp skeleton.tar.gz test@bubba:
+
+# på bubban
+cp /usr/lib/debootstrap/scripts/etch /usr/lib/debootstrap/scripts/estelle_full
+debootstrap --include=bubba-frontend,excito-keyring,locales,squeezecenter  estelle_full root http://update.excito.org/ 
+

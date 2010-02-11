@@ -1,0 +1,61 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          home
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     2
+# Default-Stop:      
+# Short-Description: creates home lvm
+# Description:       This script generates LWM partiton and formats it
+### END INIT INFO
+
+# Author: Carl Fürstenberg <carl@excito.com>
+
+# Do NOT "set -e"
+
+DEVICE=/dev/sda2
+INIT_HOME=/etc/init.d/init_home
+
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
+case "$1" in
+	start)
+	log_action_begin_msg "Creating LVM volume";
+	pvcreate --yes $DEVICE >/dev/null &&
+	vgcreate bubba $DEVICE >/dev/null &&
+	lvcreate --extents 100%FREE --name storage bubba >/dev/null
+	log_action_end_msg $?
+
+	log_action_begin_msg "Formating LVM volume";
+	mkfs.ext3 -q -L "Bubba home" /dev/mapper/bubba-storage >/dev/null &&
+	tune2fs -c0 -i0 /dev/mapper/bubba-storage >/dev/null
+	log_action_end_msg $?
+
+	log_action_begin_msg "Installing default home";
+	mount -text3 /dev/mapper/bubba-storage /mnt/home >/dev/null &&
+	cp --archive /default_home/* /mnt/home >/dev/null &&
+	rm -rf /default_home >/dev/null &&
+	umount /mnt/home >/dev/null
+	log_action_end_msg $?
+
+	log_action_begin_msg "Removing LVM create/format init script";
+	update-rc.d $(basename $INIT_HOME) remove >/dev/null &&
+	rm -f $INIT_HOME >/dev/null &&
+	log_action_end_msg $?
+	;;
+	stop|restart|force-reload)
+	# Nothing
+	;;
+	*)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	exit 3
+	;;
+esac
+
+:

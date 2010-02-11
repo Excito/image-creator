@@ -1,0 +1,5 @@
+/dev/sda1	/	ext3	noatime,defaults	0	1
+/dev/mapper/bubba-storage	/home	ext3	defaults		0	2
+/dev/sda3	none	swap	sw			0	0
+usbfs		/proc/bus/usb	usbfs	defaults	0	0
+/proc		/proc	proc	defaults		0       0
