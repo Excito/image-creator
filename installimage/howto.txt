@@ -1,0 +1,3 @@
+To build installer:
+
+mkimage -f image.its install.itb
