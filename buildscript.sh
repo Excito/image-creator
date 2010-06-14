@@ -43,7 +43,7 @@ rm -rf $INSTALL $ROOT
 ( cd installer && make skel )
 
 # the debootstrap
-cdebootstrap estelle_full $ROOT http://update.excito.org/
+cdebootstrap vincent_full $ROOT http://update.excito.org/
 
 # install the skeleton (XXX make obsolete?)
 tar -zxvf installer/skeleton.tar.gz -C $ROOT/

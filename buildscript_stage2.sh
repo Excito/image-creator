@@ -20,8 +20,11 @@
 
 mount /proc;
 
-sed -i 's/unstable/testing/g;s/claire/estelle/g' /etc/apt/preferences
-sed -i '/marielle\|upstream_etch\s\|ftp.se.debian.org/ { s/^\(deb\)/#\1/g }; /claire/ { /deb-src/ !{ s/#\(deb\)/\1/ } ; s/claire/estelle/ }' /etc/apt/sources.list
+sed -i 's/unstable/testing/g;s/vincent/vincent/g' /etc/apt/preferences
+cat <<EOF > /etc/apt/sources.list
+deb http://b3.update.excito.org/ vincent main
+deb http://b3.update.excito.org/ upstream_squeeze_forvincent main
+EOF
 
 apt-get update
 

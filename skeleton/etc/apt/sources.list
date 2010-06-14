@@ -5,45 +5,45 @@
 # vim: ft=debsources
 
 # The stable BUBBA|TWO repository, is in the suite "stable".
-deb http://update.excito.org/ marielle main
+deb http://b3.update.excito.org/ elvin main
 
 # The stable BUBBA|TWO repository, is in the suite "stable". source packages
-#deb-src http://update.excito.org/ marielle main
+#deb-src http://b3.update.excito.org/ elvin main
 
 # The upstream packages used in BUBBA|TWO, is in the suite "upstream_stable".
-deb http://update.excito.org/ upstream_etch main
+deb http://b3.update.excito.org/ upstream_squeeze main
 
 # The upstream packages used in BUBBA|TWO, is in the suite "upstream_stable". source packages
-#deb-src http://update.excito.org/ upstream_etch main
+#deb-src http://b3.update.excito.org/ upstream_squeeze main
 
-# The debian etch repository containing unsupported packages that can be used.
-deb http://ftp.se.debian.org/debian etch main
+# The debian squeeze repository containing unsupported packages that can be used.
+deb http://ftp.se.debian.org/debian squeeze main
 
-# The debian etch repository containing unsupported packages that can be used. source packages
-#deb-src http://ftp.se.debian.org/debian etch main
+# The debian squeeze repository containing unsupported packages that can be used. source packages
+#deb-src http://ftp.se.debian.org/debian squeeze main
 
-# The debian etch repository containing unsupported packages that can be used.
-#deb http://ftp.se.debian.org/debian etch contrib
+# The debian squeeze repository containing unsupported packages that can be used.
+#deb http://ftp.se.debian.org/debian squeeze contrib
 
-# The debian etch repository containing unsupported packages that can be used. source packages
-#deb-src http://ftp.se.debian.org/debian etch contrib
+# The debian squeeze repository containing unsupported packages that can be used. source packages
+#deb-src http://ftp.se.debian.org/debian squeeze contrib
 
-# The debian etch repository containing unsupported packages that can be used.
-#deb http://ftp.se.debian.org/debian etch non-free
+# The debian squeeze repository containing unsupported packages that can be used.
+#deb http://ftp.se.debian.org/debian squeeze non-free
 
-# The debian etch repository containing unsupported packages that can be used. source packages
-#deb-src http://ftp.se.debian.org/debian etch non-free
+# The debian squeeze repository containing unsupported packages that can be used. source packages
+#deb-src http://ftp.se.debian.org/debian squeeze non-free
 
 
 # The unstable BUBBA|TWO repository, is in the suite "unstable".
-#deb http://update.excito.org/ claire main
+#deb http://b3.update.excito.org/ vincent main
 
 # The unstable BUBBA|TWO repository, is in the suite "unstable". source packages
-#deb-src http://update.excito.org/ claire main
+#deb-src http://b3.update.excito.org/ vincent main
 
-# The upstream packages used in unstable BUBBA|TWO, is in the suite "upstream_stable_forclaire".
-#deb http://update.excito.org/ upstream_etch_forclaire main
+# The upstream packages used in unstable BUBBA|TWO, is in the suite "upstream_stable_forvincent".
+#deb http://b3.update.excito.org/ upstream_squeeze_forvincent main
 
-# The upstream packages used in unstable BUBBA|TWO, is in the suite "upstream_stable_forclaire". source packages
-#deb-src http://update.excito.org/ upstream_etch_forclaire main
+# The upstream packages used in unstable BUBBA|TWO, is in the suite "upstream_stable_forvincent". source packages
+#deb-src http://b3.update.excito.org/ upstream_squeeze_forvincent main
 
