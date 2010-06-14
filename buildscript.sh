@@ -53,7 +53,9 @@ _old_hostname=`cat /proc/sys/kernel/hostname`;
 echo bubba > /proc/sys/kernel/hostname;
 
 #stop running mysql
-/etc/init.d/mysql stop || true
+if [ -e /etc/init.d/mysql ]; then
+	/etc/init.d/mysql stop || true
+fi
 
 # setup answers to debconf
 cat installer/debconf | chroot $ROOT debconf-set-selections
@@ -99,7 +101,9 @@ sha1sum b2-install-$ver.zip > b2-install-$ver.zip.sha1
 sha256sum b2-install-$ver.zip > b2-install-$ver.zip.sha256
 
 #(re)start mysql
-/etc/init.d/mysql start || true
+if [ -e /etc/init.d/mysql ]; then
+	/etc/init.d/mysql start || true
+fi
 
 # restore hostname
 echo $_old_hostname > /proc/sys/kernel/hostname;
