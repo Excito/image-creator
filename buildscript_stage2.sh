@@ -28,7 +28,7 @@ EOF
 
 apt-get update
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+DEBIAN_FRONTEND=noninteractive apt-get install -y postfix mysql-server
 
 cat <<EOF > /usr/sbin/policy-rc.d
 #!/bin/sh
