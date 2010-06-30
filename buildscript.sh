@@ -23,6 +23,8 @@ set -e
 
 ROOT="./root";
 INSTALL="./install"
+SUITE="hugo-full"
+URI=" http://b3.update.excito.org/"
 
 if [ ! -d installer ]; then
 	if [ `basename $PWD` = 'installer' ]; then
@@ -41,9 +43,13 @@ fi
 rm -rf $INSTALL $ROOT
 # make the skeleton
 ( cd installer && make skel )
+if ! type -t cdebootstrap-excito >/dev/null; then
+	DEBIAN_FRONTEND=noninteractive apt-get update
+	DEBIAN_FRONTEND=noninteractive apt-get install -y cdebootstrap-excito
+fi
 
 # the debootstrap
-cdebootstrap hugo_full $ROOT http://b3.update.excito.org/
+cdebootstrap $SUITE $ROOT $URI
 
 # install the skeleton (XXX make obsolete?)
 tar -zxvf installer/skeleton.tar.gz -C $ROOT/
