@@ -20,11 +20,13 @@
 
 # die die
 set -e 
+set -x
 
 ROOT="./root";
 INSTALL="./install"
-SUITE="hugo-full"
+SUITE="testing_full"
 URI=" http://b3.update.excito.org/"
+FILENAME="b3-install"
 
 if [ ! -d installer ]; then
 	if [ `basename $PWD` = 'installer' ]; then
@@ -43,7 +45,7 @@ fi
 rm -rf $INSTALL $ROOT
 # make the skeleton
 ( cd installer && make skel )
-if ! type -t cdebootstrap-excito >/dev/null; then
+if [ ! -d /usr/share/cdebootstrap/excito ]; then
 	DEBIAN_FRONTEND=noninteractive apt-get update
 	DEBIAN_FRONTEND=noninteractive apt-get install -y cdebootstrap-excito
 fi
@@ -102,9 +104,9 @@ mv bubbaroot-$_date.tar.gz $INSTALL/payload
 
 # zip and checksum the install
 ver=${1:-0.0.1}
-zip -0 -r b2-install-$ver.zip $INSTALL
-sha1sum b2-install-$ver.zip > b2-install-$ver.zip.sha1
-sha256sum b2-install-$ver.zip > b2-install-$ver.zip.sha256
+zip -0 -r $FILENAME-$ver.zip $INSTALL
+sha1sum $FILENAME-$ver.zip > $FILENAME-$ver.zip.sha1
+sha256sum $FILENAME-$ver.zip > $FILENAME-$ver.zip.sha256
 
 #(re)start mysql
 if [ -e /etc/init.d/mysql ]; then
