@@ -1,26 +1,42 @@
 #! /bin/sh
 
 # default config
+
 DO_INSTALL=1
 USE_EXTERNAL_SCRIPT=0
-ROOT_SIZE=10
-SWAP_SIZE=1
 FORMAT=1
 PARTITION=1
 SETDATETIME=1
 USELVM=1
 
+ROOT_SIZE=10GiB
+SWAP_SIZE=1024MiB
+
+#########################DO NOT EDIT BELOW!############################
+
+_parted=/usr/sbin/parted-static
+_device=/dev/sda
+_root=/dev/sda1
+_home=/dev/sda2
+_swap=/dev/sda3
+_vg_name=bubba
+_lv_name=storage
+_lvm=/dev/mapper/$_vg_name-$_lv_name
+_ledfreq=/sys/devices/platform/bubbatwo/ledfreq
+_ledmode=/sys/devices/platform/bubbatwo/ledmode
+
+
 # Indicate mount-phase
-echo 4096 > /sys/devices/platform/bubbatwo/ledfreq
-echo blink > /sys/devices/platform/bubbatwo/ledmode
+echo 4096 > $_ledfreq
+echo blink > $_ledmode
 
 getusb () {
 	for arg in /sys/block/sd?
 	do 
-		DISK=`readlink -f $arg|grep usb | xargs -r basename`
-		if [ -b /dev/${DISK}1 ]
+		_disk=`readlink -f $arg|grep usb | xargs -r basename`
+		if [ -b /dev/${_disk}1 ]
 		then
-			RET="/dev/${DISK}1"
+			_partition="/dev/${_disk}1"
 		fi	
 	done
 }
@@ -32,7 +48,7 @@ waitforusb () {
 		sleep 1
 		echo "Waiting for usb device to show up"
 		getusb
-		if [ -n "$RET" ]
+		if [ -n "$_partition" ]
 		then
 			i=0
 		fi
@@ -44,14 +60,14 @@ waitforusb
 
 # Mount usb-stick
 echo "Mount usb"
-while ! mount -t vfat $RET /mnt/usb
+while ! mount -t vfat $_partition /mnt/usb
 do
 	sleep 1
 done
 
 # Indicate install-phase
-echo 8192 > /sys/devices/platform/bubbatwo/ledfreq
-echo blink > /sys/devices/platform/bubbatwo/ledmode
+echo 8192 > $_ledfreq
+echo blink > $_ledmode
 
 if [ -e /mnt/usb/install/bubba.cfg ]; then
 		echo "Reading external config"
@@ -62,8 +78,8 @@ fi
 if [ $DO_INSTALL -eq 0 ]; then
 	echo "Not doing install by your command"
 	# Blink slowly to indicate that we wont install.
-	echo 32768 > /sys/devices/platform/bubbatwo/ledfreq
-	echo blink > /sys/devices/platform/bubbatwo/ledmode
+	echo 32768 > $_ledfreq
+	echo blink > $_ledmode
 	exit 0
 fi
 
@@ -74,24 +90,17 @@ if [ $USE_EXTERNAL_SCRIPT -eq 1 ]; then
 		/mnt/usb/install/einstall.sh
 	fi
 	# blink real slow to tell were done executing external script 
-	echo 49152 > /sys/devices/platform/bubbatwo/ledfreq
-	echo blink > /sys/devices/platform/bubbatwo/ledmode
+	echo 49152 > $_ledfreq
+	echo blink > $_ledmode
 	exit 0
 fi
 
-IFILES=`ls -1 /mnt/usb/install/payload/*.tar.gz | wc  -l`
-if [ $IFILES -le 0 ]; then
+_ifiles=`ls -1 /mnt/usb/install/payload/*.tar.gz | wc  -l`
+if [ $_ifiles -le 0 ]; then
 	echo "No payload to install, bailing out"
-	echo 2048 > /sys/devices/platform/bubbatwo/ledfreq
-	echo blink > /sys/devices/platform/bubbatwo/ledmode
+	echo 2048 > $_ledfreq
+	echo blink > $_ledmode
 	exit 1
-fi
-
-# Use lvm or linux native type
-if [ $USELVM -eq 1 ]; then
-DPARTTYPE="8e"
-else
-DPARTTYPE="83"
 fi
 
 echo "Fixing umask"
@@ -107,89 +116,59 @@ fi
 
 if [ $PARTITION -eq 1 ]; then
 	echo "Partition disk"
-	# Get size in GB
-	DISK=`cat /proc/partitions | grep sda$| cut -b 11-21`
-	GB_DATA=$(( ($DISK*1024)/1000000000 ))
- 
-	#Calculate "home" partition size
-	HOME_SIZE=$(( $GB_DATA-($ROOT_SIZE+$SWAP_SIZE) ))
-
-	fdisk /dev/sda <<HERE
-o
-n
-p
-1
-1
-+${ROOT_SIZE}000M
-n
-p
-2
-
-+${HOME_SIZE}000M
-n
-p
-3
-
-
-t
-1
-83
-t
-2
-$DPARTTYPE
-t
-3
-82
-w
-
-HERE
+	$_parted --script $_device --align optimal -- mklabel gpt
+	$_parted --script $_device --align optimal -- mkpart root ext3 0 $ROOT_SIZE
+	$_parted --script $_device --align optimal -- mkpart home ext3 $ROOT_SIZE -$SWAP_SIZE
+	$_parted --script $_device --align optimal -- mkpart swap linux-swap -$SWAP_SIZE -1
 else
 	echo "Not partitioning disk"
 fi
 
 if [ $USELVM -eq 1 ]; then
 	echo "Create volume"
+	$_parted --script $_device --align optimal -- toggle 2 lvm
 	export LVM_SYSTEM_DIR=/tmp/lvm
-	pvcreate /dev/sda2
-	vgcreate bubba /dev/sda2
-	lvcreate -l 100%FREE --name storage bubba
+	pvcreate $_home
+	vgcreate $_vg_name $_home
+	lvcreate -l 100%FREE --name $_lv_name $_vg_name
 else
 	echo "Not creating volume"
 fi
 
 echo "Format system disk"
-mkfs.ext3 -q -L "Bubba root" /dev/sda1
-tune2fs -c0 -i0 /dev/sda1
+mkfs.ext3 -q -L "Bubba root" $_root
+tune2fs -c0 -i0 $_root
 
 if [ $FORMAT -eq 1 ]; then
 	if [ $USELVM -eq 1 ]; then
 		echo "Formatting lvm data partition"
-		mkfs.ext3 -q -L "Bubba home" /dev/mapper/bubba-storage
-		tune2fs -c0 -i0 /dev/mapper/bubba-storage
+		mkfs.ext3 -q -L "Bubba home" $_lvm
+		tune2fs -c0 -i0 $_lvm
 	else
 		echo "Formatting native data partition"
-		mkfs.ext3 -q -L "Bubba home" /dev/sda2
-		tune2fs -c0 -i0 /dev/sda2
+		mkfs.ext3 -q -L "Bubba home" $_home
+		tune2fs -c0 -i0 $_home
 	fi
 else
 	echo "Not formatting data partition"
 fi
 
 echo "Create swapspace"
-mkswap /dev/sda3
+mkswap $_swap
  
 echo "Install root filesystem"
-mount -text3 /dev/sda1 /mnt/disk
+mount -text3 $_root /mnt/disk
 mkdir /mnt/disk/home
 if [ $USELVM -eq 1 ]; then
-	mount -text3 /dev/mapper/bubba-storage /mnt/disk/home
+	mount -text3 $_lvm /mnt/disk/home
 else
-	mount -text3 /dev/sda2 /mnt/disk/home
+	mount -text3 $_home /mnt/disk/home
 fi
 
 cd /mnt/disk
 tar zxf /mnt/usb/install/payload/*.tar.gz
 echo "Creating missing devicenodes"
+# TODO XXX still needed?
 mknod dev/sda b 8 0
 mknod dev/sda1 b 8 1
 mknod dev/sda2 b 8 2
@@ -204,8 +183,8 @@ mknod dev/ttyS0 c 4 64
 mknod dev/rtc c 254 0
 
 # Indicate install done.
-echo 16384 > /sys/devices/platform/bubbatwo/ledfreq
-echo blink > /sys/devices/platform/bubbatwo/ledmode
+echo 16384 > $_ledfreq
+echo blink > $_ledmode
 
 
 echo "Reboot into new system"
