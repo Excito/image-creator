@@ -48,7 +48,7 @@ shadowconfig on
 
 apt-get clean
 
-rm -f /var/lib/apt/lists/update.excito.org_dists_*
+rm -f /var/lib/apt/lists/*excito.org_dists_*
 
 cp /usr/share/bubba-configs/apt/* /etc/apt/
 
