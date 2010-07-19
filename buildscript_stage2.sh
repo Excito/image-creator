@@ -18,6 +18,9 @@
 #      REVISION:  ---
 #===============================================================================
 
+set -e
+set -x
+
 mount /proc;
 
 sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
