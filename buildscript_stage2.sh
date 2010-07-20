@@ -39,7 +39,7 @@ exit 101
 EOF
 chmod 755 /usr/sbin/policy-rc.d
 
-DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y bubba3-kernel bubba3-modules bubba squeezecenter less
+DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y bubba3-kernel bubba3-modules bubba-buttond bubba squeezecenter less
 
 rm -f /usr/sbin/policy-rc.d
 
