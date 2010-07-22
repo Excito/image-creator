@@ -90,6 +90,7 @@ find $ROOT/var/run/ -name "*.pid" -exec rm {} \;
 # conf fixes
 perl -pi -e 's/sysfs_scan = 1/sysfs_scan = 0/' $ROOT/etc/lvm/lvm.conf
 perl -pi -e 's/NO_START=1/NO_START=0/' $ROOT/etc/default/apache2
+perl -pi -e 's/FSCKFIX=no/FSCKFIX=yes/' $ROOT/etc/default/rcS # (bug #1484)
 
 # build the payload
 export _date=`date +%y%m%d-%H%M`
