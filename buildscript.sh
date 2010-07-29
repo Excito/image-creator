@@ -103,8 +103,10 @@ tar -zxvf installer/envelope.tar.gz
 # move payload into envelope
 mv bubbaroot-$_date.tar.gz $INSTALL/payload
 
+
 # zip and checksum the install
 ver=${1:-0.0.1}
+echo $ver > $INSTALL/version
 zip -0 -r $FILENAME-$ver.zip $INSTALL
 sha1sum $FILENAME-$ver.zip > $FILENAME-$ver.zip.sha1
 sha256sum $FILENAME-$ver.zip > $FILENAME-$ver.zip.sha256
