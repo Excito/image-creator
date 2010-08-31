@@ -57,7 +57,7 @@ cp /usr/share/bubba-configs/apt/* /etc/apt/
 
 ## TODO fixed?
 chown root:users /home/storage
-chmod 1777 /home/storage
+#chmod 1777 /home/storage
 
 
 umount /proc
