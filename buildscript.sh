@@ -56,9 +56,9 @@ cdebootstrap $SUITE $ROOT $URI
 # install the skeleton (XXX make obsolete?)
 tar -zxvf installer/skeleton.tar.gz -C $ROOT/
 
-# change hostname to bubba
+# change hostname to b3
 _old_hostname=`cat /proc/sys/kernel/hostname`;
-echo bubba > /proc/sys/kernel/hostname;
+echo b3 > /proc/sys/kernel/hostname;
 
 #stop running mysql
 if [ -e /etc/init.d/mysql ]; then
