@@ -24,7 +24,8 @@ _lv_name=storage
 _lvm=/dev/mapper/$_vg_name-$_lv_name
 _ledfreq=/sys/devices/platform/bubbatwo/ledfreq
 _ledmode=/sys/devices/platform/bubbatwo/ledmode
-
+/sbin/lvdisplay bubba                          
+_lvm_mode=$?          
 
 # Indicate mount-phase
 echo 4096 > $_ledfreq
@@ -120,8 +121,22 @@ if [ $PARTITION -eq 1 ]; then
 	$_parted --script $_device --align optimal -- mkpart root ext3 0 $ROOT_SIZE
 	$_parted --script $_device --align optimal -- mkpart home ext3 $ROOT_SIZE -$SWAP_SIZE
 	$_parted --script $_device --align optimal -- mkpart swap linux-swap -$SWAP_SIZE -1
+
+
+
 else
 	echo "Not partitioning disk"
+fi
+
+if [ $FORMAT -eq 1 ]; then
+	if [ $_lvm_mode == 0 ]; then
+		# only remove if we also format the disk.
+		echo "Removing existing lvm"
+		lvremove -f /dev/bubba/storage
+		vgremove -f bubba
+		pvremove -f /dev/sda2
+		echo "LVM removed"                                     
+	fi
 fi
 
 if [ $USELVM -eq 1 ]; then
@@ -134,6 +149,7 @@ if [ $USELVM -eq 1 ]; then
 else
 	echo "Not creating volume"
 fi
+
 
 echo "Format system disk"
 mkfs.ext3 -q -L "Bubba root" $_root
