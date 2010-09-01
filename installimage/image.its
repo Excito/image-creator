@@ -24,7 +24,7 @@
 
 		ramdisk@1 {
 			description = "Excito installer";
-			data = /incbin/("./rootfs.arm.ext2.gz");
+			data = /incbin/("./rootfs.ext2.gz");
 			type = "ramdisk";
 			arch = "arm";
 			os = "linux";
