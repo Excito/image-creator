@@ -14,7 +14,7 @@ SWAP_SIZE=1024MiB
 
 #########################DO NOT EDIT BELOW!############################
 
-_parted=/usr/sbin/parted-static
+_parted=/usr/sbin/parted
 _device=/dev/sda
 _root=/dev/sda1
 _home=/dev/sda2
