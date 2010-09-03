@@ -115,6 +115,17 @@ else
 	echo "Not setting date/time"
 fi
 
+if [ $FORMAT -eq 1 ]; then
+	if [ $_lvm_mode == 0 ]; then
+		# only remove if we also format the disk.
+		echo "Removing existing lvm"
+		lvremove -f /dev/bubba/storage
+		vgremove -f bubba
+		pvremove -f /dev/sda2
+		echo "LVM removed"                                     
+	fi
+fi
+
 if [ $PARTITION -eq 1 ]; then
 	echo "Partition disk"
 	$_parted --script $_device --align optimal -- mklabel gpt
@@ -126,17 +137,6 @@ if [ $PARTITION -eq 1 ]; then
 
 else
 	echo "Not partitioning disk"
-fi
-
-if [ $FORMAT -eq 1 ]; then
-	if [ $_lvm_mode == 0 ]; then
-		# only remove if we also format the disk.
-		echo "Removing existing lvm"
-		lvremove -f /dev/bubba/storage
-		vgremove -f bubba
-		pvremove -f /dev/sda2
-		echo "LVM removed"                                     
-	fi
 fi
 
 if [ $USELVM -eq 1 ]; then
