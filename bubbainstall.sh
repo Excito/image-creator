@@ -14,6 +14,7 @@ SWAP_SIZE=1024MiB
 
 #########################DO NOT EDIT BELOW!############################
 
+_mdadm=/usr/sbin/mdadm
 _parted=/usr/sbin/parted
 _device=/dev/sda
 _root=/dev/sda1
@@ -24,8 +25,6 @@ _lv_name=storage
 _lvm=/dev/mapper/$_vg_name-$_lv_name
 _ledfreq=/sys/devices/platform/bubbatwo/ledfreq
 _ledmode=/sys/devices/platform/bubbatwo/ledmode
-/sbin/lvdisplay bubba                          
-_lvm_mode=$?          
 
 # Indicate mount-phase
 echo 4096 > $_ledfreq
@@ -66,13 +65,28 @@ do
 	sleep 1
 done
 
+# Logging to file
+_logfile=install-`date +%F_%H%M%S`.txt
+exec 2>>/mnt/usb/install/$_logfile
+exec 1>>/mnt/usb/install/$_logfile
+
+echo "Check if we have an old lvm disk"
+/sbin/lvdisplay bubba                          
+_lvm_mode=$?          
+
+echo "Check if we an old raid disk"
+$_mdadm --examine /dev/sda2 1> /dev/null 2> /dev/null 
+_raid_mode=$?
+
 # Indicate install-phase
 echo 8192 > $_ledfreq
 echo blink > $_ledmode
 
 if [ -e /mnt/usb/install/bubba.cfg ]; then
-		echo "Reading external config"
-		. /mnt/usb/install/bubba.cfg
+	echo "Reading external config"
+	. /mnt/usb/install/bubba.cfg
+else
+	echo "No external config available"
 fi
 
 # Look if we should install at all.
@@ -89,6 +103,8 @@ if [ $USE_EXTERNAL_SCRIPT -eq 1 ]; then
 	if [ -e /mnt/usb/install/einstall.sh ]; then
 		echo "Transfering control to external installer"
 		/mnt/usb/install/einstall.sh
+	else
+		echo "No external script found"
 	fi
 	# blink real slow to tell were done executing external script 
 	echo 49152 > $_ledfreq
@@ -107,6 +123,15 @@ fi
 echo "Fixing umask"
 umask 0
 
+echo "Check for preinst script"
+if [ -e /mnt/usb/install/preinst.sh ]; then
+	echo "Executing preinst"
+	/mnt/usb/install/preinst.sh
+else
+	echo "No preinst script available"
+fi
+
+
 if [ $SETDATETIME -eq 1 ]; then
 	echo "Setting date/time"
 	/usr/bin/wget -O - http://www.excito.com/install/date.php | /usr/bin/xargs /bin/date
@@ -118,11 +143,27 @@ fi
 if [ $FORMAT -eq 1 ]; then
 	if [ $_lvm_mode == 0 ]; then
 		# only remove if we also format the disk.
+		echo "Possibly reduce lvm if degraded"
+		vgreduce --removemissing bubba
 		echo "Removing existing lvm"
 		lvremove -f /dev/bubba/storage
 		vgremove -f bubba
 		pvremove -f /dev/sda2
-		echo "LVM removed"                                     
+		echo "LVM removed"
+	else
+		echo "No LVM attached"                                    
+	fi
+
+	if [ $_raid_mode == 0 ]; then
+		echo "Stopping raid devices"
+		for x in /dev/md?*
+		do
+			$_mdadm --stop $x
+		done
+		echo "Zero possible raid superblock on data partition"
+		$_mdadm --zero-superblock /dev/sda2
+	else
+		echo "No raid devices detected"
 	fi
 fi
 
@@ -202,6 +243,24 @@ mknod dev/rtc c 254 0
 echo 16384 > $_ledfreq
 echo blink > $_ledmode
 
+echo "Check for postinst script"
+if [ -e /mnt/usb/install/postinst.sh ]; then
+	echo "Executing postinst"
+	/mnt/usb/install/postinst.sh
+else
+	echo "No postinst script available"
+fi
 
+sync
+
+echo "Umount home install partition"
+umount /mnt/disk/home
+echo "Umount system install partition"
+umount /mnt/disk
+echo "Umount usb storage"
+umount /mnt/usb
+
+sync
+echo "Install done"
 echo "Reboot into new system"
 reboot
