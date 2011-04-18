@@ -144,11 +144,11 @@ if [ $FORMAT -eq 1 ]; then
 	if [ $_lvm_mode == 0 ]; then
 		# only remove if we also format the disk.
 		echo "Possibly reduce lvm if degraded"
-		vgreduce --removemissing bubba
+		vgreduce --force --removemissing bubba
 		echo "Removing existing lvm"
-		lvremove -f /dev/bubba/storage
-		vgremove -f bubba
-		pvremove -f /dev/sda2
+		lvremove --force /dev/bubba/storage
+		vgremove --force bubba
+		pvremove --force /dev/sda2
 		echo "LVM removed"
 	else
 		echo "No LVM attached"                                    
@@ -184,8 +184,8 @@ if [ $USELVM -eq 1 ]; then
 	echo "Create volume"
 	$_parted --script $_device --align optimal -- toggle 2 lvm
 	export LVM_SYSTEM_DIR=/tmp/lvm
-	pvcreate $_home
-	vgcreate $_vg_name $_home
+	pvcreate --force --force --yes $_home
+	vgcreate --force --yes $_vg_name $_home
 	lvcreate -l 100%FREE --name $_lv_name $_vg_name
 else
 	echo "Not creating volume"
