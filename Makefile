@@ -5,16 +5,7 @@ DESTDIR=$(DISTDIR)
 all:
 
 skel:
-	-@rm -rf skeleton.export
-	svn export skeleton skeleton.export
-	fakeroot make real-skel
-	rm -rf skeleton.export
-
-real-skel:
-	@dh_testroot
-	find skeleton.export -type d -exec chmod 0755 '{}' ';'
-	find skeleton.export -type f -exec chmod 0644 '{}' ';'
-	(cd skeleton.export && tar --create --gzip --file ../skeleton.tar.gz *) 
+	(cd skeleton && tar --create --gzip --file ../skeleton.tar.gz *)
 dist:
 	mkdir -p $(DESTDIR)/bin
 	mkdir -p $(DESTDIR)/etc/init.d
