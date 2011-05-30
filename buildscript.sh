@@ -98,8 +98,8 @@ export _date=`date +%y%m%d-%H%M`
 gzip --fast bubbaroot-$_date.tar
 
 # extract the envelope
-mkdir -p install/payload
-cp -r envelope/* install
+mkdir -p $INSTALL/payload
+cp -r installer/envelope/* $INSTALL
 
 # move payload into envelope
 mv bubbaroot-$_date.tar.gz $INSTALL/payload
