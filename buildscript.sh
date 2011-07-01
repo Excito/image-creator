@@ -20,7 +20,6 @@
 
 # die die
 set -e 
-set -x
 
 ROOT="./root";
 INSTALL="./install"
@@ -28,23 +27,14 @@ SUITE="testing_full"
 URI=" http://b3.update.excito.org/"
 FILENAME="b3-install"
 
-if [ ! -d installer ]; then
-	if [ `basename $PWD` = 'installer' ]; then
-		cd ..
-	else
-		echo "need to be executed in topdir above installer dir";
-		exit 1;
-	fi;
-fi
 if [ `id -u` != 0 ]; then
-	sudo installer/`basename $0` $@;
+	sudo $0 $@;
 	exit;
 fi 
 # cleanup
 
 rm -rf $INSTALL $ROOT
-# make the skeleton
-( cd installer && make skel )
+
 if [ ! -d /usr/share/cdebootstrap/excito ]; then
 	DEBIAN_FRONTEND=noninteractive apt-get update
 	DEBIAN_FRONTEND=noninteractive apt-get install -y cdebootstrap-excito
@@ -53,8 +43,8 @@ fi
 # the debootstrap
 cdebootstrap $SUITE $ROOT $URI
 
-# install the skeleton (XXX make obsolete?)
-tar -zxvf installer/skeleton.tar.gz -C $ROOT/
+# install the skeleton (should become obsolete in the future)
+cp -a skeleton/* $ROOT/
 
 # change hostname to b3
 _old_hostname=`cat /proc/sys/kernel/hostname`;
@@ -66,10 +56,10 @@ if [ -e /etc/init.d/mysql ]; then
 fi
 
 # setup answers to debconf
-cat installer/debconf | chroot $ROOT debconf-set-selections
+cat debconf | chroot $ROOT debconf-set-selections
 
 # stage two build script
-cp installer/buildscript_stage2.sh $ROOT/runme.sh
+cp buildscript_stage2.sh $ROOT/runme.sh
 chmod 755 $ROOT/runme.sh
 
 # run it
@@ -99,7 +89,7 @@ gzip --fast bubbaroot-$_date.tar
 
 # extract the envelope
 mkdir -p $INSTALL/payload
-cp -r installer/envelope/* $INSTALL
+cp -a envelope/* $INSTALL
 
 # move payload into envelope
 mv bubbaroot-$_date.tar.gz $INSTALL/payload
@@ -119,5 +109,3 @@ fi
 
 # restore hostname
 echo $_old_hostname > /proc/sys/kernel/hostname;
-
-( cd installer && make clean )
