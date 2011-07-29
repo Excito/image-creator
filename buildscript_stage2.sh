@@ -23,10 +23,10 @@ set -x
 
 mount /proc;
 
-sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
+#sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
 cat <<EOF > /etc/apt/sources.list
-deb http://b3.update.excito.org/ hugo main
-deb http://b3.update.excito.org/ upstream_squeeze_forhugo main
+deb http://b3.update.excito.org/ vincent main
+deb http://b3.update.excito.org/ upstream_squeeze_forvincent main
 EOF
 
 apt-get update
@@ -39,7 +39,7 @@ exit 101
 EOF
 chmod 755 /usr/sbin/policy-rc.d
 
-DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y bubba-kernel bubba-modules bubba-buttond bubba squeezecenter less
+DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y bubba-kernel bubba-modules bubba-buttond lvm2 openssh-server dhcp3-client ifplugd less
 
 rm -f /usr/sbin/policy-rc.d
 
