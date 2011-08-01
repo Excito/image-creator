@@ -53,7 +53,7 @@ apt-get clean
 
 rm -f /var/lib/apt/lists/*excito.org_dists_*
 
-cp /usr/share/bubba-configs/apt/* /etc/apt/
+#cp /usr/share/bubba-configs/apt/* /etc/apt/
 
 ## TODO fixed?
 chown root:users /home/storage
