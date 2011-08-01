@@ -56,7 +56,7 @@ rm -f /var/lib/apt/lists/*excito.org_dists_*
 #cp /usr/share/bubba-configs/apt/* /etc/apt/
 
 ## TODO fixed?
-chown root:users /home/storage
+#chown root:users /home/storage
 #chmod 1777 /home/storage
 
 
