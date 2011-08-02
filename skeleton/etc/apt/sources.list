@@ -5,13 +5,13 @@
 # vim: ft=debsources
 
 # The stable BUBBA|TWO repository, is in the suite "stable".
-deb http://b3.update.excito.org/ elvin main
+deb http://b3.update.excito.org/ vincent main
 
 # The stable BUBBA|TWO repository, is in the suite "stable". source packages
 #deb-src http://b3.update.excito.org/ elvin main
 
 # The upstream packages used in BUBBA|TWO, is in the suite "upstream_stable".
-deb http://b3.update.excito.org/ upstream_squeeze main
+deb http://b3.update.excito.org/ upstream_squeeze_forvincent main
 
 # The upstream packages used in BUBBA|TWO, is in the suite "upstream_stable". source packages
 #deb-src http://b3.update.excito.org/ upstream_squeeze main

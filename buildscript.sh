@@ -25,7 +25,7 @@ ROOT="./root";
 INSTALL="./install"
 SUITE="testing_full"
 URI=" http://b3.update.excito.org/"
-FILENAME="b3-install"
+FILENAME="b2-install"
 
 if [ `id -u` != 0 ]; then
 	sudo $0 $@;
@@ -48,7 +48,7 @@ cp -a skeleton/* $ROOT/
 
 # change hostname to b3
 _old_hostname=`cat /proc/sys/kernel/hostname`;
-echo b3 > /proc/sys/kernel/hostname;
+echo b2 > /proc/sys/kernel/hostname;
 
 #stop running mysql
 if [ -e /etc/init.d/mysql ]; then

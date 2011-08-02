@@ -1,6 +1,6 @@
-127.0.0.1	b3.localdomain	b3
+127.0.0.1	b2.localdomain	b2
 127.0.0.1	localhost.localdomain	localhost
-192.168.10.1	b3.localdomain	b3
+192.168.10.1	b2.localdomain	b2
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback

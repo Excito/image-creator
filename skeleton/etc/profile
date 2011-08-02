@@ -21,4 +21,4 @@ fi
 
 export PATH
 
-umask 000
+umask 022
