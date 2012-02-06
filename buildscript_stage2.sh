@@ -23,10 +23,10 @@ set -x
 
 mount /proc;
 
-#sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
+sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
 cat <<EOF > /etc/apt/sources.list
-deb http://b3.update.excito.org/ vincent main
-deb http://b3.update.excito.org/ upstream_squeeze_forvincent main
+deb http://b3.update.excito.org/ hugo main
+deb http://b3.update.excito.org/ upstream_squeeze_forhugo main
 EOF
 
 apt-get update
