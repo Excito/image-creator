@@ -1,20 +1,33 @@
-# BUBBA|TWO apt preferences
+# B3 apt preferences
 #
 # Changes in this file might break your system
 #
 # Stable bubba release, currently elvin
 Package: *
 Pin:
- release o=Excito, a=stable, v=1.0,
- origin "b3.update.excito.org"
+ release o=Excito, n=hive,
+ origin "xyz.update.excito.org"
 Pin-Priority: 999
+
+Package: *
+Pin:
+ release o=Excito, n=elvin, v=1.0,
+ origin "b3.update.excito.org"
+Pin-Priority: 888
 
 # Unstable bubba release, always vincent
 Package: *
 Pin:
- release o=Excito, a=unstable,
+ release o=Excito, n=vincent,
  origin "b3.update.excito.org"
-Pin-Priority: 999
+Pin-Priority: 888
+
+# Unstable bubba release, always vincent
+Package: *
+Pin:
+ release o=Excito, n=hugo,
+ origin "b3.update.excito.org"
+Pin-Priority: 888
 
 # Old stable release, currently vacant
 Package: *
@@ -26,38 +39,45 @@ Pin-Priority: 1000
 # Stable bubba stable debian upstream, currently squeeze
 Package: *
 Pin: 
- release o=Debian Etch, a=upstream_stable, v=1.0,
+ release o=Debian Squeeze, n=upstream_squeeze, v=1.0,
+ origin "b3.update.excito.org"
+Pin-Priority: 600
+
+# Unstable bubba stable debian upstream, currently squeeze
+Package: *
+Pin:
+ release o=Debian Squeeze, n=upstream_squeeze_forhugo,
  origin "b3.update.excito.org"
 Pin-Priority: 600
 
 # Unstable bubba stable debian upstream, currently squeeze
 Package: *
 Pin: 
- release o=Debian Etch, a=upstream_stable_forvincent,
+ release o=Debian Squeeze, n=upstream_squeeze_forvincent,
  origin "b3.update.excito.org"
 Pin-Priority: 600
 
 # Stable bubba debian upstream, currently vacant
 Package: *
 Pin:
- release o=Debian Etch, a=upstream_oldstable, v=1.0,
+ release o=Debian Squeeze, a=upstream_oldstable, v=1.0,
  origin "b3.update.excito.org"
 Pin-Priority: 601
 
 # Upstream main debian, currently squeeze
 Package: *
 Pin: 
- release o=Debian, a=stable, v=4.0r4a, c=main
+ release o=Debian, n=elvin, v=4.0r4a, c=main
 Pin-Priority: 500
 
 # Upstream contrib debian, currently squeeze
 Package: *
 Pin: 
- release o=Debian, a=stable, v=4.0r4a, c=contrib
+ release o=Debian, n=elvin, v=4.0r4a, c=contrib
 Pin-Priority: 400
 
 # Upstream non-free debian, currently squeeze
 Package: *
 Pin: 
- release o=Debian, a=stable, v=4.0r4a, c=non-free
+ release o=Debian, n=elvin, v=4.0r4a, c=non-free
 Pin-Priority: 300
