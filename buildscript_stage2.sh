@@ -25,7 +25,7 @@ mount /proc;
 
 sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
 cat <<EOF > /etc/apt/sources.list
-deb http://dorkmeister:fisk@xyz.update.excito.org/ hive main
+deb http://dorkmeister:fisk@xyz.update.excito.org/ test main
 deb http://b3.update.excito.org/ hugo main
 deb http://b3.update.excito.org/ upstream_squeeze_forhugo main
 EOF
