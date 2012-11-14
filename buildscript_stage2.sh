@@ -25,10 +25,13 @@ mount /proc;
 
 sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
 cat <<EOF > /etc/apt/sources.list
-deb http://dorkmeister:fisk@xyz.update.excito.org/ test main
 deb http://b3.update.excito.org/ hugo main
 deb http://b3.update.excito.org/ upstream_squeeze_forhugo main
 EOF
+
+apt-get update
+
+DEBIAN_FRONTEND=noninteractive apt-get install -y tele2
 
 apt-get update
 
