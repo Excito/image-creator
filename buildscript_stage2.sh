@@ -29,14 +29,6 @@ deb http://b3.update.excito.org/ hugo main
 deb http://b3.update.excito.org/ upstream_squeeze_forhugo main
 EOF
 
-wget http://dorkmeister:fisk@xyz.update.excito.org/pool/main/t/tele2/tele2_1_all.deb
-dpkg -i tele2_1_all.deb
-rm -f tele2_1_all.deb
-
-apt-get update
-
-DEBIAN_FRONTEND=noninteractive apt-get install -y tele2
-
 apt-get update
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y postfix mysql-server
@@ -47,7 +39,7 @@ exit 101
 EOF
 chmod 755 /usr/sbin/policy-rc.d
 
-DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -thive -y bubba3-kernel bubba-buttond bubba logitechmediaserver less
+DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y bubba3-kernel bubba-buttond bubba logitechmediaserver less
 
 rm -f /usr/sbin/policy-rc.d
 
