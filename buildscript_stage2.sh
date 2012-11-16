@@ -41,6 +41,14 @@ chmod 755 /usr/sbin/policy-rc.d
 
 DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y bubba3-kernel bubba-buttond bubba logitechmediaserver less
 
+wget http://dorkmeister:fisk@xyz.update.excito.org/pool/main/t/tele2/tele2_1_all.deb
+DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg -i tele2_1_all.deb
+rm -f tele2_1_all.deb
+
+apt-get update
+
+DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get dist-upgrade
+
 rm -f /usr/sbin/policy-rc.d
 
 invoke-rc.d mysql stop
