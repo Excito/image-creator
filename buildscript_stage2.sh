@@ -44,6 +44,7 @@ DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install 
 wget http://dorkmeister:fisk@xyz.update.excito.org/pool/main/t/tele2/tele2_1_all.deb
 DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg -i tele2_1_all.deb
 rm -f tele2_1_all.deb
+:>/etc/apt/preferences
 
 apt-get update
 
