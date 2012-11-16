@@ -47,7 +47,7 @@ rm -f tele2_1_all.deb
 
 apt-get update
 
-DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get dist-upgrade
+DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get dist-upgrade -y
 
 rm -f /usr/sbin/policy-rc.d
 
