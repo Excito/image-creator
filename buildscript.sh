@@ -108,3 +108,5 @@ fi
 
 # restore hostname
 echo $_old_hostname > /proc/sys/kernel/hostname;
+
+rm -rf $INSTALL $ROOT
