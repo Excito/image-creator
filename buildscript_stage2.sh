@@ -20,6 +20,10 @@
 
 set -x
 
+B3_VERSION=${1:-0.0.1}
+B3_TARGET_SUIT=${2:-test}
+B3_RESTORE_SUIT_TO_RELEASE=${3:-false}
+
 mount /proc;
 
 sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
@@ -42,8 +46,8 @@ DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install 
 
 wget http://dorkmeister:fisk@xyz.update.excito.org/pool/main/t/tele2/tele2_1_all.deb
 DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg -i tele2_1_all.deb
-sed -i 's/release/test/' /etc/apt/sources.list.d/tele2.list
-sed -i 's/n=release/n=test/' /etc/apt/preferences.d/tele2
+sed -i "s/release/$B3_TARGET_SUIT/" /etc/apt/sources.list.d/tele2.list
+sed -i "s/n=release/n=$B3_TARGET_SUIT/" /etc/apt/preferences.d/tele2
 rm -f tele2_1_all.deb
 :>/etc/apt/preferences
 
@@ -51,8 +55,13 @@ apt-get update
 
 DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get dist-upgrade -y
 
-sed -i 's/test/release/' /etc/apt/sources.list.d/tele2.list
-sed -i 's/n=test/n=release/' /etc/apt/preferences.d/tele2
+if [ "$B3_RESTORE_SUIT_TO_RELEASE" -eq "true" ]; then
+  sed -i "s/$B3_TARGET_SUIT/release/" /etc/apt/sources.list.d/tele2.list
+  sed -i "s/n=$B3_TARGET_SUIT/n=release/" /etc/apt/preferences.d/tele2
+fi
+
+# set version to our build version
+echo $B3_VERSION > /etc/bubba.version
 
 rm -f /usr/sbin/policy-rc.d
 
