@@ -51,6 +51,9 @@ apt-get update
 
 DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get dist-upgrade -y
 
+sed -i 's/test/release/' /etc/apt/sources.list.d/tele2.list
+sed -i 's/n=test/n=release/' /etc/apt/preferences.d/tele2
+
 rm -f /usr/sbin/policy-rc.d
 
 invoke-rc.d mysql stop
