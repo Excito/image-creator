@@ -55,7 +55,7 @@ apt-get update
 
 DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get dist-upgrade -y
 
-if [ "$B3_RESTORE_SUIT_TO_RELEASE" -eq "true" ]; then
+if $B3_RESTORE_SUIT_TO_RELEASE; then
   sed -i "s/$B3_TARGET_SUIT/release/" /etc/apt/sources.list.d/tele2.list
   sed -i "s/n=$B3_TARGET_SUIT/n=release/" /etc/apt/preferences.d/tele2
 fi
