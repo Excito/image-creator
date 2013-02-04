@@ -1,0 +1,6 @@
+[gerrit]
+host=dev.excito.org
+port=29418
+project=installer.git
+defaultbranch=master
+
