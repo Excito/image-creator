@@ -86,7 +86,7 @@ perl -pi -e 's/FSCKFIX=no/FSCKFIX=yes/' $ROOT/etc/default/rcS # (bug #1484)
 
 # build the payload
 export _date=`date +%y%m%d-%H%M`
-( cd $ROOT && tar --create --verbose --file ../bubbaroot-$_date.tar * )
+( cd $ROOT && tar --create --file ../bubbaroot-$_date.tar * )
 gzip --fast bubbaroot-$_date.tar
 
 # extract the envelope
