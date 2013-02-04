@@ -26,6 +26,7 @@ SUITE="testing_full"
 URI=" http://b3.update.excito.org/"
 FILENAME="b3-install"
 
+B3_VERSION=${1:-0.0.1}
 if [ `id -u` != 0 ]; then
 	sudo $0 $@;
 	exit;
@@ -95,11 +96,10 @@ mv bubbaroot-$_date.tar.gz $INSTALL/payload
 
 
 # zip and checksum the install
-ver=${1:-0.0.1}
-echo $ver > $INSTALL/version
-zip -0 -r $FILENAME-$ver.zip $INSTALL
-sha1sum $FILENAME-$ver.zip > $FILENAME-$ver.zip.sha1
-sha256sum $FILENAME-$ver.zip > $FILENAME-$ver.zip.sha256
+echo $B3_VERSION > $INSTALL/version
+zip -0 -r $FILENAME-$B3_VERSION.zip $INSTALL
+sha1sum $FILENAME-$B3_VERSION.zip > $FILENAME-$B3_VERSION.zip.sha1
+sha256sum $FILENAME-$B3_VERSION.zip > $FILENAME-$B3_VERSION.zip.sha256
 
 #(re)start mysql
 if [ -e /etc/init.d/mysql ]; then
