@@ -20,6 +20,9 @@
 
 set -x
 
+
+B3_RELEASE_SUIT=$1
+
 mount /proc;
 
 sed -i 's/unstable/testing/g;s/vincent/hugo/g' /etc/apt/preferences
@@ -53,6 +56,10 @@ apt-get clean
 rm -f /var/lib/apt/lists/*excito.org_dists_*
 
 cp /usr/share/bubba-configs/apt/* /etc/apt/
+
+if $B3_RELEASE_SUIT; then
+  change_distribution -u $B3_RELEASE_SUIT
+fi
 
 ## TODO fixed?
 chown root:users /home/storage

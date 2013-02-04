@@ -27,6 +27,8 @@ URI=" http://b3.update.excito.org/"
 FILENAME="b3-install"
 
 B3_VERSION=${1:-0.0.1}
+B3_RELEASE_SUIT=${2:-stable}
+
 if [ `id -u` != 0 ]; then
 	sudo $0 $@;
 	exit;
@@ -63,7 +65,7 @@ cp buildscript_stage2.sh $ROOT/runme.sh
 chmod 755 $ROOT/runme.sh
 
 # run it
-chroot $ROOT /runme.sh
+chroot $ROOT /runme.sh $B3_RELEASE_SUIT
 
 #remove it
 rm -f $ROOT/runme.sh
