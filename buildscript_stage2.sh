@@ -57,7 +57,7 @@ rm -f /var/lib/apt/lists/*excito.org_dists_*
 
 cp /usr/share/bubba-configs/apt/* /etc/apt/
 
-if $B3_RELEASE_SUIT; then
+if [ "$B3_RELEASE_SUIT" != "" ]; then
   change_distribution -u $B3_RELEASE_SUIT
 fi
 
